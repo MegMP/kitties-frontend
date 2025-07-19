@@ -1,3 +1,2 @@
+// Only export account functionality - other pages were removed to focus on account management
 export * from "./account";
-export * from "./auth";
-export * from "./home";
