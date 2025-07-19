@@ -1,11 +1,59 @@
-// Import our custom hook (User type is used indirectly through the hook)
-import { useUserData } from "./hooks";
+// Import our custom hook and User type
+import { useUserData, type User } from "./hooks";
 import { AccountForm } from "./components";
 import type { AccountAttribute } from "./components/AccountForm/AccountForm.types";
 
 type AccountProps = {
   userId: number;
 };
+
+// Define the configuration for each form field
+// This approach is much cleaner than repeating the same JSX structure
+// It's also easier to maintain - add a new field by just adding it to this array!
+const FORM_FIELDS = [
+  {
+    key: 'username' as AccountAttribute,
+    label: 'Username',
+    placeholder: 'Enter new username',
+    required: true,
+    getValue: (user: User) => user.username, // Show actual value
+  },
+  {
+    key: 'email' as AccountAttribute,
+    label: 'Email',
+    placeholder: 'Enter new email',
+    required: true,
+    getValue: (user: User) => user.email,
+  },
+  {
+    key: 'password' as AccountAttribute,
+    label: 'Password',
+    placeholder: 'Enter new password',
+    required: true,
+    getValue: () => '••••••••', // Always show masked password
+  },
+  {
+    key: 'firstname' as AccountAttribute,
+    label: 'First Name',
+    placeholder: 'Enter first name',
+    required: true,
+    getValue: (user: User) => user.firstname,
+  },
+  {
+    key: 'lastname' as AccountAttribute,
+    label: 'Last Name',
+    placeholder: 'Enter last name',
+    required: true,
+    getValue: (user: User) => user.lastname,
+  },
+  {
+    key: 'city' as AccountAttribute,
+    label: 'City',
+    placeholder: 'Enter your city',
+    required: false,
+    getValue: (user: User) => user.city || 'Not specified',
+  },
+] as const;
 
 export const Account = ({ userId }: AccountProps) => {
   // Use our custom hook to fetch user data
@@ -77,74 +125,26 @@ export const Account = ({ userId }: AccountProps) => {
         Update your personal information below. Changes are saved automatically.
       </p>
 
-      {/* Each field gets its own form component */}
-      {/* This pattern makes the code modular and reusable */}
-      
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>Username:</strong> {user.username}
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="username"
-          placeholder="Enter new username"
-          required
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>Email:</strong> {user.email}
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="email"
-          placeholder="Enter new email"
-          required
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>Password:</strong> ••••••••
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="password"
-          placeholder="Enter new password"
-          required
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>First Name:</strong> {user.firstname}
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="firstname"
-          placeholder="Enter first name"
-          required
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>Last Name:</strong> {user.lastname}
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="lastname"
-          placeholder="Enter last name"
-          required
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <strong>City:</strong> {user.city || 'Not specified'}
-        <AccountForm
-          userId={userId}
-          handleChangeValue={handleChangeValue}
-          type="city"
-          placeholder="Enter your city"
-          required={false}
-        />
-      </div>
+      {/* 
+        Map over form fields instead of repeating JSX
+        This is a much cleaner approach for several reasons:
+        1. DRY (Don't Repeat Yourself) - no duplicated code
+        2. Easy to maintain - add/remove/modify fields in one place
+        3. Consistent styling and behavior across all fields
+        4. Type-safe with our FORM_FIELDS configuration
+      */}
+      {FORM_FIELDS.map((field) => (
+        <div key={field.key} style={{ marginBottom: '1.5rem' }}>
+          <strong>{field.label}:</strong> {field.getValue(user)}
+          <AccountForm
+            userId={userId}
+            handleChangeValue={handleChangeValue}
+            type={field.key}
+            placeholder={field.placeholder}
+            required={field.required}
+          />
+        </div>
+      ))}
 
       {/* Refresh button for manual data refresh */}
       <div style={{ marginTop: '2rem', textAlign: 'center' }}>
