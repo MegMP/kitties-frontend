@@ -22,11 +22,7 @@ export const Account = ({ userId }: idType) => {
 
   useEffect(() => {
     axios
-      .get(`/api/v1/accounts`, {
-        headers: {
-          id: userId,
-        },
-      })
+      .get(`/api/v1/accounts`, { withCredentials: true })
       .then((res) => setUser(res.data))
       .catch((err) => console.error(err));
   }, [userId]);

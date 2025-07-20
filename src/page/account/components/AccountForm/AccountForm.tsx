@@ -9,35 +9,40 @@ export const AccountForm = ({
   placeholder,
   required,
 }: AccountFormProps) => {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     try {
-      if (type == "firstname") {
-        await axios.patch(
-          `/api/v1/accounts/firstname`,
-          { username: data.value },
+      // if (type == "firstname") {
+      //   await axios.patch(
+      //     `/api/v1/accounts/firstname`,
+      //     { username: data.value },
+      //     { headers: { id: userId } }
+      //   );
+      // } else if (type === "username") {
+      //   await axios.patch(
+      //     `/api/v1/accounts/username`,
+      //     { username: data.value },
+      //     { headers: { id: userId } }
+      //   );
+      // } else if (type === "password") {
+      //   await axios.patch(
+      //     `/api/v1/accounts/password`,
+      //     { password: data.value },
+      //     { headers: { id: userId } }
+      //   );
+      // } else if (type === "city") {
+      //   await axios.patch(
+      //     `/api/v1/accounts/city`,
+      //     { city: data.value },
+      //     { headers: { id: userId } }
+      //   );
+      // }
+      await axios.patch(
+          `/api/v1/accounts`,
+          { [type]: data.value },
           { headers: { id: userId } }
         );
-      } else if (type === "username") {
-        await axios.patch(
-          `/api/v1/accounts/username`,
-          { username: data.value },
-          { headers: { id: userId } }
-        );
-      } else if (type === "password") {
-        await axios.patch(
-          `/api/v1/accounts/password`,
-          { password: data.value },
-          { headers: { id: userId } }
-        );
-      } else if (type === "city") {
-        await axios.patch(
-          `/api/v1/accounts/city`,
-          { city: data.value },
-          { headers: { id: userId } }
-        );
-      }
       handleChangeValue(data.value, type);
     } catch (error) {
       console.error("Error:", error);

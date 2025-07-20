@@ -1,12 +1,55 @@
+import { useLogin } from "./hooks/useAuthenticate";
+import { useState } from "react";
+import { Input } from "./components/Input";
+import { InvalidData } from "./mod/InvalidData";
+
 export const Login = () => {
-    return (
-        <>
-        <h1>This is the login page</h1>
-        <form action="/login" method="post">
-            <input type="email" name="email" placeholder="Email" required /><br/>
-            <input type="password" name="password" placeholder="Password" required /><br/>
-            <button type="submit">Log in</button>
-        </form>
-        <a href="/register">register</a></>
-    )
-}
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [result, setResult] = useState("");
+  const loginMutation = useLogin();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: () => {
+          setResult("Success");
+        },
+        onError: (error: any) => {
+          console.error(
+            "Login error:",
+            error.response ?? error.message ?? error
+          );
+          setResult("Error");
+        },
+      }
+    );
+  };
+
+  return (
+    <>
+      <h1>This is the login page</h1>
+      {result === "Error" && (
+        <InvalidData message="Wrong username or password" />
+      )}
+      <form onSubmit={handleSubmit}>
+        <Input
+          attribute="username"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          attribute="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Log in</button>
+      </form>
+      <a href="/register">register</a>
+    </>
+  );
+};
