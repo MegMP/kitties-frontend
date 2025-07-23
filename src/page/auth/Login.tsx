@@ -1,18 +1,21 @@
 import { useLogin } from "./hooks/useAuthenticate";
 import { useState } from "react";
-import { Input } from "./components/Input";
 import { InvalidData } from "./mod/InvalidData";
+import { useForm } from "react-hook-form";
 
 export const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit, reset } = useForm<FormData>();
   const [result, setResult] = useState("");
   const loginMutation = useLogin();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  type FormData = {
+    username: string;
+    password: string;
+  };
+
+  const onSubmit = async (data: FormData) => {
     loginMutation.mutate(
-      { username, password },
+      data,
       {
         onSuccess: () => {
           setResult("Success");
@@ -34,18 +37,18 @@ export const Login = () => {
       {result === "Error" && (
         <InvalidData message="Wrong username or password" />
       )}
-      <form onSubmit={handleSubmit}>
-        <Input
-          attribute="username"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input
+          type="username"
+          {...register("username", { required: true })}
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          required
         />
-        <Input
-          attribute="password"
+        <input
+          type="password"
+          {...register("password", { required: true })}
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit">Log in</button>
       </form>

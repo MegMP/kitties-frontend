@@ -13,9 +13,8 @@ export const useLogin = () => {
     mutationFn: (data: AuthRequest) => {
       return axios
         .post(
-          "http://localhost:8080/api/v1/login",
+          "/api/v1/login",
           data,
-          { withCredentials: true }
         )
         .then((res) => res.data);
     },
