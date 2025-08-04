@@ -1,25 +1,12 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { AccountForm } from "./components";
-import { useQuery } from "@tanstack/react-query";
 import { useUserData } from "./hooks/useUserData";
 
 type idType = {
   userId: number;
 };
 
-type User = {
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  password: string;
-  email: string;
-  city: string;
-};
-
 export const Account = ({ userId }: idType) => {
-  const { data, isLoading, error, refetch} = useUserData(userId);
+  const { data, isLoading, error, refetch } = useUserData(userId);
 
   if (isLoading) {
     return <div>Loading...</div>;
