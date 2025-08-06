@@ -1,3 +1,4 @@
+import { Nav } from "../../components/Nav";
 import { useUserData } from "./hooks/useUserData";
 import { Navigate } from "react-router-dom";
 
@@ -18,14 +19,9 @@ export const Home = () => {
 
   return (
     <>
+    <Nav></Nav>
       <h1>This is the home page</h1>
       <h3>Hi {data?.username}, welcome to our page</h3>
-      <a href="/account">account</a>
-      <br />
-      <a href="/matches">matches</a>
-      <br />
-      <a href="/mailbox">mailbox</a>
-      <br />
     </>
   );
 };
