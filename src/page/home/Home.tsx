@@ -1,11 +1,9 @@
-import { Nav } from "../../components/Nav";
-import { useUserData } from "./hooks/useUserData";
 import { Navigate } from "react-router-dom";
+import { useCandidates } from "./hooks/useCandidates";
+import { UserSwiper } from "./components/UserSwiper";
 
 export const Home = () => {
-  const { data, isLoading, error } = useUserData();
-  console.log(error);
-
+  const { data, isLoading, error } = useCandidates();
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -16,12 +14,11 @@ export const Home = () => {
     console.log(error?.response);
     return <p>Sorry, something went wrong</p>;
   }
+  if(data?.length === 0) {
+    return <p>No more users to display</p>;
+  }
 
   return (
-    <>
-    <Nav></Nav>
-      <h1>This is the home page</h1>
-      <h3>Hi {data?.username}, welcome to our page</h3>
-    </>
+    <UserSwiper users={data ?? []} />
   );
 };

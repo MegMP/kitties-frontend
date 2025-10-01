@@ -1,18 +1,43 @@
-import { Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  NavigationMenu,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
+import { Home, LogOut } from "lucide-react";
 
 export const Nav = () => {
+  const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("token")
-    return <Navigate to="/login"></Navigate>;
-  }
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
-    <>
-      <a href="/user/account">account </a>
-      <a href="/user/friends">friends </a>
-      <a href="user/mailbox">mailbox </a>
-      <button onClick={logout}>Log out</button>
-    </>
+    <div className="w-full bg-white flex flex-row justify-between p-3 border shadow-sm">
+      <NavigationMenu className="flex justify-center w-full">
+        <NavigationMenuList>
+          <NavigationMenuLink asChild className="flex justify-center mr-2">
+            <Link to="/">
+              <Home size={18} className="text-pink-800" />
+            </Link>
+          </NavigationMenuLink>
+          <NavigationMenuLink asChild>
+            <Link to="/profile">Profile</Link>
+          </NavigationMenuLink>
+          <NavigationMenuLink asChild>
+            <Link to="/friends">Friends</Link>
+          </NavigationMenuLink>
+          <NavigationMenuLink asChild>
+            <Link to="/mailbox">Mailbox</Link>
+          </NavigationMenuLink>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <Button variant="ghost" onClick={logout} className="cursor-pointer">
+        <LogOut size={18} />
+      </Button>
+    </div>
   );
 };

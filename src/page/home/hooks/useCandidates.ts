@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import type { UserResponse } from "../types/UserResponse";
+import type { AxiosError } from "axios";
+import axios from "axios";
+import type { FullFriendsResponse } from "../types/FullFriendResponse";
 
-export const useUserData = () => {
+export const useCandidates = () => {
   const token = localStorage.getItem("token");
 
-  return useQuery<UserResponse, AxiosError>({
-    queryKey: ["users"],
+  return useQuery<FullFriendsResponse[], AxiosError>({
+    queryKey: ["friends"],
     queryFn: () => {
       return axios
-        .get("http://localhost:8080/api/v1/users/me", {
+        .get("http://localhost:8080/api/v1/friends/candidates ", {
           headers: {
             Authorization: token === null ? null : `Bearer ${token}`,
           },
